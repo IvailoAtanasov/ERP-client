@@ -27,6 +27,8 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import OrdersDetails from "./OrdersDetails";
+import { format } from "date-fns";
+import deLocale from "date-fns/locale/bg";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
+  { id: "orderId", label: "№" },
   { id: "status", label: "Статус" },
   { id: "exitDate", label: "Дата на издаване" },
   { id: "cakeName", label: "Име на торта" },
@@ -171,6 +174,7 @@ const Orders = () => {
     setRecordForEdit(item);
     setOpenPopup(true);
     setRedOnly(true);
+    //setDetails(true);
   };
 
   const deleteOrder = (url) => {
@@ -232,6 +236,7 @@ const Orders = () => {
             onClick={() => {
               setOpenPopup(true);
               setRecordForEdit(null);
+              setRedOnly(false);
             }}
           />
         </Toolbar>
@@ -263,8 +268,13 @@ const Orders = () => {
           <TableBody>
             {ordersAfterPagingandSorting().map((item) => (
               <TableRow key={item._id}>
+                <TableCell>{item.orderId}</TableCell>
                 <TableCell>{getStatusNameById(item.status)}</TableCell>
-                <TableCell>{item.exitDate}</TableCell>
+                <TableCell>
+                  {format(new Date(item.exitDate), "eeee dd MMM yy", {
+                    locale: deLocale,
+                  })}
+                </TableCell>
                 <TableCell>{item.cakeName}</TableCell>
                 <TableCell>{item.customerFirstName}</TableCell>
                 <TableCell>{item.customerLastName}</TableCell>
@@ -308,11 +318,7 @@ const Orders = () => {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <Popup
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-        title="Форма за поръчки"
-      >
+      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Поръчки">
         <OrdersForm
           recordForEdit={recordForEdit}
           editOne={editOne}

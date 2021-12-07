@@ -114,6 +114,8 @@ const OrdersForm = (props) => {
   const registerHandler = async (e) => {
     e.preventDefault();
 
+    console.log(values);
+
     if (validate()) {
       try {
         if (values.id === 0) {
