@@ -24,6 +24,7 @@ const initialValues = {
   executedBy: "",
   status: "received",
   executionLocation: "",
+  photo: "",
 };
 
 const numberOfPiecesList = [
@@ -119,7 +120,14 @@ const OrdersForm = (props) => {
       try {
         console.log(values);
         if (values.id === 0) {
-          addOne("/api/orders/register", values);
+          const formData = new FormData();
+
+          for (var key in values) {
+            formData.append(key, values[key]);
+          }
+
+          addOne("/api/orders/register", formData);
+
           setSuccessMessage("Успешна регистрация на поръчка");
         } else {
           editOne(`/api/orders/order/${values._id}`, values);
@@ -155,6 +163,10 @@ const OrdersForm = (props) => {
       });
     // eslint-disable-next-line
   }, [recordForEdit]);
+
+  const handlePhoto = (e) => {
+    setValues({ ...values, photo: e.target.files[0] });
+  };
 
   return (
     <Form onSubmit={registerHandler}>
@@ -312,6 +324,12 @@ const OrdersForm = (props) => {
             options={takeAwayPlaceList}
             error={errors.executionLocation}
             readOnly={isReadOnly()}
+          />
+          <Controls.Input
+            type="file"
+            accept=".png, .jpg, .jpeg"
+            name="photo"
+            onChange={handlePhoto}
           />
 
           <Controls.Select

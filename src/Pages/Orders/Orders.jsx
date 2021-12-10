@@ -28,6 +28,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import { format } from "date-fns";
 import deLocale from "date-fns/locale/bg";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -141,6 +142,22 @@ const Orders = () => {
     const isAsc = orderBy === cellId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(cellId);
+  };
+
+  const addOneForm = (url, values) => {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    };
+    axios.post(url, values, config);
+    setTimeout(() => {
+      setOpenPopup(false);
+    }, 1500);
+    getAll("/api/orders").then((response) => {
+      setOrders(response.data);
+    });
   };
 
   const addOne = (url, recordsObj) => {
@@ -322,7 +339,7 @@ const Orders = () => {
         <OrdersForm
           recordForEdit={recordForEdit}
           editOne={editOne}
-          addOne={addOne}
+          addOne={addOneForm}
           readOnly={readOnly}
           statusList={statusList}
         />
