@@ -9,7 +9,7 @@ const initialValues = {
   id: 0,
   exitDate: new Date(),
   cakeName: "",
-  numberOfPieces: 0,
+  numberOfPieces: 1,
   cakeFilling: "",
   deliveryMethod: "",
   takeAwayPlace: "",
@@ -27,11 +27,11 @@ const initialValues = {
 };
 
 const numberOfPiecesList = [
-  { id: "1", title: "1" },
-  { id: "4", title: "4" },
-  { id: "6", title: "6" },
-  { id: "8", title: "8" },
-  { id: "12", title: "12" },
+  { id: 1, title: "1" },
+  { id: 4, title: "4" },
+  { id: 6, title: "6" },
+  { id: 8, title: "8" },
+  { id: 12, title: "12" },
 ];
 
 const deliveryMethodList = [
@@ -93,9 +93,10 @@ const OrdersForm = (props) => {
     if ("customerPhone" in fieldValues)
       temp.customerPhone =
         fieldValues.customerPhone &&
+        // eslint-disable-next-line
         /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(
           fieldValues.customerPhone
-        ) // eslint-disable-line
+        )
           ? ""
           : "Невалиден телефонен номер";
 
@@ -114,10 +115,9 @@ const OrdersForm = (props) => {
   const registerHandler = async (e) => {
     e.preventDefault();
 
-    console.log(values);
-
     if (validate()) {
       try {
+        console.log(values);
         if (values.id === 0) {
           addOne("/api/orders/register", values);
           setSuccessMessage("Успешна регистрация на поръчка");
@@ -149,11 +149,11 @@ const OrdersForm = (props) => {
   };
 
   useEffect(() => {
-    localStorage.setItem("readOnly", isReadOnly());
     if (recordForEdit !== null)
       setValues({
         ...recordForEdit,
       });
+    // eslint-disable-next-line
   }, [recordForEdit]);
 
   return (
@@ -243,7 +243,7 @@ const OrdersForm = (props) => {
             onChange={handleInputChange}
             options={numberOfPiecesList}
             error={errors.numberOfPieces}
-            readOnly={isReadOnly()}
+            //readOnly={isReadOnly()}
           />
 
           <Controls.RadioGroup

@@ -21,7 +21,7 @@ export const DatePicker = (props) => {
         disableToolbar
         inputVariant="outlined"
         label={label}
-        format={"eeee dd MMM yy"}
+        formate={"dd/MM/yyyy"}
         name={name}
         value={value}
         onChange={(date) => onChange(convertToDefEventPara(name, date))}

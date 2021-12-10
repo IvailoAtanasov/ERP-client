@@ -26,7 +26,6 @@ import {
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
-import OrdersDetails from "./OrdersDetails";
 import { format } from "date-fns";
 import deLocale from "date-fns/locale/bg";
 
@@ -87,6 +86,7 @@ const Orders = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [readOnly, setRedOnly] = useState(false);
+  // eslint-disable-next-line
   const [details, setDetails] = useState(false);
 
   useEffect(() => {
@@ -314,8 +314,8 @@ const Orders = () => {
           rowsPerPageOptions={pages}
           rowsPerPage={rowsPerPage}
           count={orders.length}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
       <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Поръчки">

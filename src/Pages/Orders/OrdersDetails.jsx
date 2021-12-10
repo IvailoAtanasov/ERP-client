@@ -1,4 +1,5 @@
-import { Grid, Typography, Divider } from "@material-ui/core";
+// eslint-disable-next-line
+import { Grid, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import deLocale from "date-fns/locale/bg";
