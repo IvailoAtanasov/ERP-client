@@ -1,94 +1,303 @@
 // eslint-disable-next-line
-import { Grid, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { Grid, Paper, Typography, Box } from "@material-ui/core";
 import { format } from "date-fns";
 import deLocale from "date-fns/locale/bg";
 
 const OrdersDetails = (props) => {
-  const { recordForEdit } = props;
-  const [values, setValues] = useState({});
+  const { recordForEdit, getStatusNameById } = props;
 
-  useEffect(() => {
-    if (recordForEdit !== null)
-      setValues({
-        ...recordForEdit,
-      });
-  }, [recordForEdit]);
-
-  const date = () => {
-    return format(new Date(values.exitDate), "eeee dd MMM yy", {
+  const date = (date) => {
+    return format(new Date(date), "eee dd MMM yyyy", {
       locale: deLocale,
     });
   };
 
+  const takeAwayPlaceList = [
+    { id: "center", title: "Център" },
+    { id: "mladost", title: "Младост" },
+    { id: "lozenec", title: "Лозенец" },
+  ];
+
+  const deliveryMethodList = [
+    { id: "takeAway", title: "Взимане на място" },
+    { id: "delivery", title: "Доставка" },
+  ];
+
+  const paymentMethodList = [
+    { id: "payed", title: "Платена" },
+    { id: "partialPayment", title: "Капарирана" },
+    { id: "forPayment", title: "За Плащане" },
+  ];
+
+  const getNameById = (id, list) => {
+    for (const element of list) {
+      if (element.id === id) return element.title;
+    }
+  };
+
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} justify="center">
       <Grid item xs={12} sm={6}>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Статус: ${values.status}`}</Typography>
-        <Typography style={{ marginTop: "8px" }} variant="h5">
-          {`Дата на издаване: ${date()}`}
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Статус:
+            </Box>{" "}
+          </Box>
+          {getStatusNameById(recordForEdit.status)}
         </Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Име на торта: ${values.cakeName}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Пълнеж: ${values.cakeFilling}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Брой парчета: ${values.numberOfPieces}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Създадена от: ${values.createdBy}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Допълнителна информация: ${values.additionalInfo}`}</Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Дата на издаване:
+            </Box>{" "}
+          </Box>
+          {date(recordForEdit.exitDate)}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Име на торта:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.cakeName}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Пълнеж:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.cakeFilling}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Брой парчета:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.numberOfPieces}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Създадена от:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.createdBy}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Създадена на:
+            </Box>{" "}
+          </Box>
+          {date(recordForEdit.createdAt)}
+        </Typography>
+
+        {recordForEdit.additionalInfo ? (
+          <Typography component="div">
+            <Box
+              fontWeight="fontWeightBold"
+              fontSize="h6.fontSize"
+              display="inline"
+            >
+              <Box fontSize="h6.fontSize" display="inline">
+                Допълнителна информация:
+              </Box>{" "}
+            </Box>
+            {recordForEdit.additionalInfo}
+          </Typography>
+        ) : (
+          ""
+        )}
       </Grid>
       <Grid item xs={12} sm={6} style={{ padding: "8px" }}>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Име на клиент: ${values.customerFirstName}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Фамилия на клиент: ${values.customerLastName}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Телефон на клинет: ${values.customerPhone}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Метод за доставка: ${values.deliveryMethod}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Обект за взимане: ${values.takeAwayPlace}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Адрес за доставка: ${values.deliveryAddress}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Начин на плащане: ${values.paymentMethod}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Капаро: ${values.partialPayment}`}</Typography>
-        <Typography
-          style={{ marginTop: "8px" }}
-          variant="h5"
-        >{`Обект за издаване: ${values.executionLocation}`}</Typography>
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Име на клиент:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.customerFirstName}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Фамилия на клиент:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.customerLastName}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Телефон на клинет:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.customerPhone}
+        </Typography>
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Метод за доставка:
+            </Box>{" "}
+          </Box>
+          {getNameById(recordForEdit.deliveryMethod, deliveryMethodList)}
+        </Typography>
+
+        {recordForEdit.deliveryMethod === "takeAway" ? (
+          <Typography component="div">
+            <Box
+              fontWeight="fontWeightBold"
+              fontSize="h6.fontSize"
+              display="inline"
+            >
+              <Box fontSize="h6.fontSize" display="inline">
+                Обект за взимане:
+              </Box>{" "}
+            </Box>
+            {getNameById(recordForEdit.takeAwayPlace, takeAwayPlaceList)}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        {recordForEdit.deliveryAddress ? (
+          <Typography component="div">
+            <Box
+              fontWeight="fontWeightBold"
+              fontSize="h6.fontSize"
+              display="inline"
+            >
+              <Box fontSize="h6.fontSize" display="inline">
+                Адрес за доставка:
+              </Box>{" "}
+            </Box>
+            {recordForEdit.deliveryAddress}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Статус на плащане:
+            </Box>{" "}
+          </Box>
+          {getNameById(recordForEdit.paymentMethod, paymentMethodList)}
+        </Typography>
+
+        {recordForEdit.partialPayment ? (
+          <Typography component="div">
+            <Box
+              fontWeight="fontWeightBold"
+              fontSize="h6.fontSize"
+              display="inline"
+            >
+              <Box fontSize="h6.fontSize" display="inline">
+                Капаро:
+              </Box>{" "}
+            </Box>
+            {recordForEdit.partialPayment}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Обект за издаване:
+            </Box>{" "}
+          </Box>
+          {getNameById(recordForEdit.executionLocation, takeAwayPlaceList)}
+        </Typography>
+        <Typography component="div">
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+            display="inline"
+          >
+            <Box fontSize="h6.fontSize" display="inline">
+              Обработва се от:
+            </Box>{" "}
+          </Box>
+          {recordForEdit.executedBy}
+        </Typography>
+      </Grid>
+      <Grid item xs>
+        <Paper
+          style={{ margin: "auto", display: "flex", justifyContent: "center" }}
+        >
+          <img
+            style={{ width: "80%" }}
+            src={`http://localhost:5000/images/${recordForEdit.photo}`}
+            alt=""
+          />
+        </Paper>
       </Grid>
     </Grid>
   );

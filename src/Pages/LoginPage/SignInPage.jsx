@@ -142,8 +142,7 @@ export const SignInPage = () => {
               name="email"
               autoFocus
               onChange={handleInputChange}
-              error={errors.email}
-              helperText={errors.email}
+              {...(error && { error: true, helperText: error })}
             />
             <TextField
               variant="outlined"
@@ -155,8 +154,7 @@ export const SignInPage = () => {
               type="password"
               id="password"
               onChange={handleInputChange}
-              error={errors.password}
-              helperText={errors.password}
+              {...(error && { error: true, helperText: error })}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

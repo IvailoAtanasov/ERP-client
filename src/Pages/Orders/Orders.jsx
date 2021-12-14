@@ -18,8 +18,6 @@ import { Search } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
 import { Popup } from "../../components/controls/Popup";
 import {
-  registerOne,
-  updateOne,
   getAll,
   deleteOne,
 } from "../../Services/EmployeeService/EmployeeService";
@@ -29,6 +27,7 @@ import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import { format } from "date-fns";
 import deLocale from "date-fns/locale/bg";
 import axios from "axios";
+import OrdersDetails from "./OrdersDetails";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -87,7 +86,6 @@ const Orders = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [readOnly, setRedOnly] = useState(false);
-  // eslint-disable-next-line
   const [details, setDetails] = useState(false);
 
   useEffect(() => {
@@ -160,18 +158,15 @@ const Orders = () => {
     });
   };
 
-  const addOne = (url, recordsObj) => {
-    registerOne(url, recordsObj);
-    setTimeout(() => {
-      setOpenPopup(false);
-    }, 1500);
-    getAll("/api/orders").then((response) => {
-      setOrders(response.data);
-    });
-  };
-
-  const editOne = (url, recodrObj) => {
-    updateOne(url, recodrObj);
+  const editOneForm = (url, recodrObj) => {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    };
+    // eslint-disable-next-line
+    axios.put(url, recodrObj, config);
     setTimeout(() => {
       setOpenPopup(false);
     }, 1500);
@@ -190,8 +185,8 @@ const Orders = () => {
   const openDetailsPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);
-    setRedOnly(true);
-    //setDetails(true);
+    //setRedOnly(true);
+    setDetails(true);
   };
 
   const deleteOrder = (url) => {
@@ -312,14 +307,18 @@ const Orders = () => {
                   >
                     <EditOutlinedIcon fontSize="small" />
                   </Controls.ActionButton>
-                  <Controls.ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      deleteOrder(`/api/orders/order/${item._id}`);
-                    }}
-                  >
-                    <DeleteOutlineIcon fontSize="small" />
-                  </Controls.ActionButton>
+                  {localStorage.userRole === "user" ? (
+                    ""
+                  ) : (
+                    <Controls.ActionButton
+                      color="secondary"
+                      onClick={() => {
+                        deleteOrder(`/api/orders/order/${item._id}`);
+                      }}
+                    >
+                      <DeleteOutlineIcon fontSize="small" />
+                    </Controls.ActionButton>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -335,14 +334,26 @@ const Orders = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Поръчки">
-        <OrdersForm
-          recordForEdit={recordForEdit}
-          editOne={editOne}
-          addOne={addOneForm}
-          readOnly={readOnly}
-          statusList={statusList}
-        />
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        setDetails={setDetails}
+        title="Поръчки"
+      >
+        {details ? (
+          <OrdersDetails
+            recordForEdit={recordForEdit}
+            getStatusNameById={getStatusNameById}
+          />
+        ) : (
+          <OrdersForm
+            recordForEdit={recordForEdit}
+            editOne={editOneForm}
+            addOne={addOneForm}
+            readOnly={readOnly}
+            statusList={statusList}
+          />
+        )}
       </Popup>
     </div>
   );

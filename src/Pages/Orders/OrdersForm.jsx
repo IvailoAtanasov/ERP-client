@@ -11,19 +11,19 @@ const initialValues = {
   cakeName: "",
   numberOfPieces: 1,
   cakeFilling: "",
-  deliveryMethod: "",
-  takeAwayPlace: "",
+  deliveryMethod: "takeAway",
+  takeAwayPlace: "center",
   deliveryAddress: "",
   customerFirstName: "",
   customerLastName: "",
   customerPhone: "",
   additionalInfo: "",
-  paymentMethod: "",
-  partialPayment: "",
+  paymentMethod: "forPayment",
+  partialPayment: 0,
   createdBy: "",
   executedBy: "",
   status: "received",
-  executionLocation: "",
+  executionLocation: "center",
   photo: "",
 };
 
@@ -113,24 +113,34 @@ const OrdersForm = (props) => {
   const { values, setValues, handleInputChange, errors, setErrors, resetForm } =
     useForm(initialValues, true, validate);
 
+  useEffect(() => {
+    if (recordForEdit !== null)
+      setValues({
+        ...recordForEdit,
+      });
+    // eslint-disable-next-line
+  }, [recordForEdit]);
+
+  const handlePhoto = (e) => {
+    setValues({ ...values, photo: e.target.files[0] });
+  };
+
   const registerHandler = async (e) => {
     e.preventDefault();
 
     if (validate()) {
       try {
-        console.log(values);
+        const formData = new FormData();
+        for (var key in values) {
+          formData.append(key, values[key]);
+        }
+
         if (values.id === 0) {
-          const formData = new FormData();
-
-          for (var key in values) {
-            formData.append(key, values[key]);
-          }
-
           addOne("/api/orders/register", formData);
 
           setSuccessMessage("Успешна регистрация на поръчка");
         } else {
-          editOne(`/api/orders/order/${values._id}`, values);
+          editOne(`/api/orders/order/${values._id}`, formData);
           setSuccessMessage("Записът за служителя е обновен");
         }
 
@@ -154,18 +164,6 @@ const OrdersForm = (props) => {
       return true;
     }
     return false;
-  };
-
-  useEffect(() => {
-    if (recordForEdit !== null)
-      setValues({
-        ...recordForEdit,
-      });
-    // eslint-disable-next-line
-  }, [recordForEdit]);
-
-  const handlePhoto = (e) => {
-    setValues({ ...values, photo: e.target.files[0] });
   };
 
   return (
@@ -255,7 +253,7 @@ const OrdersForm = (props) => {
             onChange={handleInputChange}
             options={numberOfPiecesList}
             error={errors.numberOfPieces}
-            //readOnly={isReadOnly()}
+            readOnly={isReadOnly()}
           />
 
           <Controls.RadioGroup
@@ -264,6 +262,7 @@ const OrdersForm = (props) => {
             value={values.deliveryMethod}
             onChange={handleInputChange}
             items={deliveryMethodList}
+            error={errors.numberOfPieces}
             readOnly={isReadOnly()}
           />
           {values.deliveryMethod === "takeAway" ? (
@@ -297,7 +296,7 @@ const OrdersForm = (props) => {
             value={values.paymentMethod}
             onChange={handleInputChange}
             items={paymentMethodList}
-            readOnly={readOnly}
+            readOnly={isReadOnly()}
           />
 
           {values.paymentMethod === "partialPayment" ? (

@@ -156,8 +156,7 @@ const ResetPasswordPage = () => {
               type="password"
               id="password"
               onChange={handleInputChange}
-              error={errors.password}
-              helperText={errors.password}
+              {...(error && { error: true, helperText: error })}
             />
             <TextField
               variant="outlined"
@@ -169,8 +168,7 @@ const ResetPasswordPage = () => {
               type="password"
               id="confirmPassword"
               onChange={handleInputChange}
-              error={errors.confirmPassword}
-              helperText={errors.confirmPassword}
+              {...(error && { error: true, helperText: error })}
             />
 
             <Button

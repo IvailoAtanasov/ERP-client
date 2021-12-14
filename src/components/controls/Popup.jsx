@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Popup = (props) => {
   const classes = useStyles();
-  const { title, children, openPopup, setOpenPopup } = props;
+  const { title, children, openPopup, setOpenPopup, setDetails } = props;
   return (
     <Dialog
       open={openPopup}
@@ -34,6 +34,9 @@ export const Popup = (props) => {
             color="secondary"
             onClick={() => {
               setOpenPopup(false);
+              setTimeout(() => {
+                setDetails(false);
+              }, 500);
             }}
           >
             <CloseIcon />

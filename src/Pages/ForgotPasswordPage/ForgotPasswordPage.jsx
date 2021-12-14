@@ -139,8 +139,7 @@ export const ForgotPasswordPage = () => {
               name="email"
               autoFocus
               onChange={handleInputChange}
-              error={errors.email}
-              helperText={errors.email}
+              {...(error && { error: true, helperText: error })}
             />
             <Button
               type="submit"

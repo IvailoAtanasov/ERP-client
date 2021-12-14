@@ -10,8 +10,10 @@ export const useForm = (initialValues, validateOnChange = false, validate) => {
 
     setValues({
       ...values,
+      executedBy: `${localStorage.firstName} ${localStorage.lastName}`,
       [name]: value,
     });
+
     if (validateOnChange) {
       validate({ [name]: value });
     }
